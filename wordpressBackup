@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# This script creates a compressed backup archive of the given directory and the given MySQL table. More details on implementation here: http://theme.fm
+# Feel free to use this script wherever you want, however you want. We produce open source, GPLv2 licensed stuff.
+# Author: Konstantin Kovshenin exclusively for Theme.fm in June, 2011
+
+# Found from http://theme.fm/2011/06/a-shell-script-for-a-complete-wordpress-backup-4/
+# Edited by Jason Sorbello 17/07/2014
+
+# Set the date format, filename and the directories where your backup files will be placed and which directory will be archived.
+NOW=$(date +"%Y%m%d")
+FILE="jasonsorbello.com.$NOW.tar"
+BACKUP_DIR="/media/DataNtfs/Backup"
+
+WWW_DIR="/var/www/html"
+
+# MySQL database
+DB_USER="slkfsefiJJJ989"
+DB_FILE="jasonsorbello.com.$NOW.sql"
+
+# Create the archive and the MySQL dump
+tar -cf $BACKUP_DIR/$FILE $WWW_DIR
+mysqldump -u $DB_USER -p --all-databases > $BACKUP_DIR/$DB_FILE
+
+# Append the dump to the archive, remove the dump and compress the whole archive.
+tar --append --file=$BACKUP_DIR/$FILE $BACKUP_DIR/$DB_FILE
+rm $BACKUP_DIR/$DB_FILE
+gzip -9 $BACKUP_DIR/$FILE

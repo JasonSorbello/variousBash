@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Backup Krystle's new laptop aka Lenie.
+# Will attempt to mount the SMB FS if it's not mounted and then backup.
+
+if [ -d /media/KrytsleLaptop/Media ]; then
+  echo "Starting backup..."
+  rsync -auvxzP --exclude 'Media' /media/KrytsleLaptop /media/DataNtfs/Backup
+  echo "Backup complete"
+else
+  echo "Mounting Lenie..."
+  mount /media/KrytsleLaptop
+  if [ -d /media/KrytsleLaptop/Media ]; then
+    echo "Starting backup..."
+    rsync -auvxzP --exclude 'Media' /media/KrytsleLaptop /media/DataNtfs/Backup
+    echo "Backup complete"
+  else
+    echo "Lenie not available"
+  fi
+fi
